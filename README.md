@@ -1,4 +1,4 @@
-# SB TOURS AND TRAVELS AGENCY SERVE
+# SB TOURS AND TRAVELS AGENCY SERVER API
 
 On behalf of SB Tours and Travels Agency is committed to offering an informative, user-friendly website with competitive rates of various hotels, guest house and resorts of Bangladesh . Our goal is to provide business and leisure travelers worldwide with a pleasant, efficient and cost-effective way to book hotel accommodation.
 
