@@ -151,6 +151,7 @@ async function run() {
         //GET tour API
         app.get('/tours', async (req, res) => {
             const cursor = tourCollection.find({});
+            const query = req.query;
             const page = req.query.page;
             const size = parseInt(req.query.size);
             let tours;
@@ -158,6 +159,9 @@ async function run() {
 
             if (page) {
                 tours = await cursor.skip(page * size).limit(size).toArray();
+            } else if (query) {
+                const cursor = tourCollection.find(query);
+                tours = await cursor.toArray();
             }
             else {
                 tours = await cursor.toArray();
@@ -166,6 +170,16 @@ async function run() {
                 count,
                 tours
             });
+        });
+
+
+        // /GET Category Tour
+
+        app.get('/tour-categories', async (req, res) => {
+            const query = req.query;
+            const cursor = tourCollection.find(query);
+            const tours = await cursor.toArray();
+            res.send(tours);
         });
 
         // Edit tour API
@@ -262,6 +276,42 @@ async function run() {
         // POST Tour Booking API
         app.post('/tour/booking', async (req, res) => {
             const result = await tourBookingCollection.insertOne(req.body);
+            res.json(result);
+        });
+
+        //GET User Orders API
+        app.get('/my-orders', async (req, res) => {
+            const cursor = tourBookingCollection.find(req.query);
+            const orders = await cursor.toArray();
+            res.send(orders);
+        });
+
+        // Edit order API
+        app.get('/my-order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const order = await tourBookingCollection.findOne(query);
+            res.send(order);
+        })
+
+        //UPDATE User Order API
+        app.put('/my-order/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: ObjectId(id) };
+            const options = { upsert: true };
+            const updateOrder = {
+                $set: req.body
+            };
+            const result = await tourBookingCollection.updateOne(filter, updateOrder, options);
+            res.json(result)
+
+        })
+
+        // Delete hotel API
+        app.delete('/my-orders/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: ObjectId(id) };
+            const result = await tourBookingCollection.deleteOne(query);
             res.json(result);
         });
 
